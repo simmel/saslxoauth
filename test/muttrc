@@ -1,0 +1,3 @@
+set imap_login="somebody@gmail.com"
+set imap_user="somebody@gmail.com"
+set imap_authenticators="XOAUTH"
