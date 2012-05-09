@@ -12,7 +12,7 @@ xoauth_init.lo: xoauth_init.c
 	gcc -Wall -Wextra -pedantic -DHAVE_CONFIG_H -I. -I/usr/include/sasl -Wall -W -g -O2 -c xoauth_init.c -fPIC -DPIC -o xoauth_init.lo
 	(cd . && ln -fs xoauth_init.lo xoauth_init.o)
 libxoauth.so.2.0.22: xoauth.lo xoauth_init.lo plugin_common.lo
-	gcc -Wall -Wextra -pedantic -shared xoauth.lo xoauth_init.lo plugin_common.lo -loauth -lcrypt -lresolv -lc  -Wl,-soname -Wl,libxoauth.so.2 -o libxoauth.so.2.0.22
+	gcc -Wall -Wextra -pedantic -shared xoauth.lo xoauth_init.lo plugin_common.lo -loauth -lcrypt -lresolv -lc -Wl,-soname -Wl,libxoauth.so.2 -o libxoauth.so.2.0.22
 
 install: all
 	install libxoauth.so.2.0.22 /usr/lib/sasl2/
