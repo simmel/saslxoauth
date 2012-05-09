@@ -17,5 +17,6 @@ libxoauth.so.2.0.22: xoauth.lo xoauth_init.lo plugin_common.lo
 install: all
 	install libxoauth.so.2.0.22 /usr/lib/sasl2/
 	(cd /usr/lib/sasl2/ && ln -sf libxoauth.so.2.0.22 libxoauth.so)
+	(cp --no-clobber .xoauthrc.sample ~/.xoauthrc && chown $(SUDO_USER):$(SUDO_GID) ~/.xoauthrc && chmod 600 ~/.xoauthrc)
 clean:
 	rm -f *.lo *.so *.so.2.0.22 *.o
