@@ -52,6 +52,9 @@
 #include <sasl.h>
 #include <saslplug.h>
 
+#include <oauth.h>
+#include <errno.h>
+
 #include "plugin_common.h"
 
 #ifdef macintosh
@@ -265,6 +268,74 @@ static int xoauth_client_mech_new(void *glob_context __attribute__((unused)),
     return SASL_OK;
 }
 
+int generate_xoauth_token (char *token, const char *email, const char *service) {
+  char url_str[1024];
+  char *url = url_str;
+  char *c_key = "anonymous";    /* consumer key */
+  char *c_secret = "anonymous"; /* consumer secret */
+  extern int errno;
+  char key[80];
+  char value[80];
+
+  FILE *config;
+  char buf[1024];
+  char t_key[80], t_secret[80];
+  char *t_key_ptr, *t_secret_ptr;
+  char config_file_char[1024], *config_file;
+
+  int argcc;
+  char **argvv = NULL;
+  char *parameters;
+  int home_len;
+
+  t_key_ptr = t_key;
+  t_secret_ptr = t_secret;
+  config_file = config_file_char;
+  /* FIXME snprintf */
+  home_len = strlen(getenv("HOME"));
+  strncpy(config_file, getenv("HOME"), home_len);
+  config_file[home_len] = '\0';
+  strncat(config_file, "/.xoauthrc", sizeof("/.xoauthrc"));
+
+  fprintf(debugfp, "config_file: %s\n", config_file);
+
+  snprintf(url, sizeof(url_str), "https://mail.google.com/mail/b/%s/%s/", email, service);
+  fprintf(debugfp,"url: %s\n", url);
+
+  config = fopen(config_file, "r");
+  if (config != NULL) {
+    while (fgets(buf,1024,config) != NULL) {
+      sscanf(buf, "%s = %s", key, value);
+      if (strncmp(key, "token", sizeof(key)) == 0) {
+        strncpy(t_key_ptr, value, sizeof(t_key));
+      }
+      else if (strncmp(key, "token_secret", sizeof(key)) == 0) {
+        strncpy(t_secret_ptr, value, sizeof(t_secret));
+      }
+    }
+  }
+  else {
+    fprintf(debugfp,"Can't read config file\n");
+    return 0;
+  }
+
+  fprintf(debugfp, "token: %s\ntoken_secret: %s\n", t_key_ptr, t_secret_ptr);
+  argcc = oauth_split_url_parameters(url, &argvv);
+
+  oauth_sign_array2_process(&argcc, &argvv, NULL, OA_HMAC, NULL, c_key, c_secret, t_key, t_secret);
+
+  parameters = oauth_serialize_url_sep(*&argcc, 1, *&argvv, ",", 4);
+
+  oauth_free_array(&argcc, &argvv);
+
+  if(parameters) {
+    snprintf(token, 1024, "GET %s %s", url, parameters);
+    free(parameters);
+    return 1;
+  }
+  return 0;
+}
+
 static int xoauth_client_mech_step(void *conn_context,
 				  sasl_client_params_t *params,
 				  const char *serverin __attribute__((unused)),
@@ -283,8 +354,7 @@ static int xoauth_client_mech_step(void *conn_context,
     int result;
     char *p;
 
-    char *credfn,xoauthstring[1024];
-    FILE *credfp;
+    char *token,xoauthstring[1024];
 
     *clientout = NULL;
     *clientoutlen = 0;
@@ -381,28 +451,15 @@ static int xoauth_client_mech_step(void *conn_context,
       goto cleanup;
     }
 
-    /* get cred filename from environment: XOAUTHCRED */
-    credfn = getenv("XOAUTHCRED");
-    if (credfn == NULL) {
+    token = xoauthstring;
+    if (generate_xoauth_token(token, oparams->user, params->service)) {
+      fprintf(debugfp, "token: %s\n", token);
+    }
+    else {
+      fprintf(debugfp, "token: %s\n", token);
+      fprintf(debugfp, "generate_xoauth_token failed\n");
       result = SASL_FAIL;
       goto cleanup;
-    }
-
-    credfp = fopen(credfn, "r");
-    if (credfp == NULL) {
-      result = SASL_FAIL;
-      goto cleanup;
-    }
-
-    memset(xoauthstring, 0, 1024);
-    if (fread(xoauthstring, 1023, 1, credfp) < 1 && ! feof(credfp) ) {
-      fprintf(debugfp, "xoauth client, read cred fail\n");
-      fprintf(debugfp, "cred is:%s===\n",xoauthstring);
-      result = SASL_FAIL;
-      goto cleanup;
-    }
-    if (*index(xoauthstring,'\n')) {
-      *index(xoauthstring,'\n')=0;
     }
 
     /* send authorized id NUL authentication id NUL password */
