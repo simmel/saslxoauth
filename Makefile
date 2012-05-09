@@ -13,6 +13,7 @@ xoauth_init.lo: xoauth_init.c
 	(cd . && ln -fs xoauth_init.lo xoauth_init.o)
 libxoauth.so.2.0.22: xoauth.lo xoauth_init.lo plugin_common.lo
 	gcc -shared  xoauth.lo xoauth_init.lo plugin_common.lo  -lcrypt -lresolv -lc  -Wl,-soname -Wl,libxoauth.so.2 -o libxoauth.so.2.0.22
+	(cd . && ln -fs libxoauth.so.2.0.22 libxoauth.so)
 
 clean:
 	rm *.lo *.so.2.0.22 *.o
