@@ -1,0 +1,23 @@
+h1. saslxoauth - an very duty SASL XOAuth plugin
+
+A very simple "Cyrus SASL2":http://cyrusimap.web.cmu.edu/ client side plugin
+for XOAuth that works with "Mutt":http://www.mutt.org/ to login into
+"Gmail":http://gmail.com IMAP.
+
+h2. Installation/setup
+
+# Build and install the plugin via @make && sudo make install@
+# Go to "Quick Run-Through with xoauth.py":https://code.google.com/p/google-mail-xoauth-tools/wiki/XoauthDotPyRunThrough#Quick_Run-Through_with_xoauth.py and download @xoauth.py@ per their instructions.
+# Follow the step "Create and Authorize an OAuth Token":https://code.google.com/p/google-mail-xoauth-tools/wiki/XoauthDotPyRunThrough#Creating_and_Authorizing_an_OAuth_Token
+# Use the @oauth_token@ and @oauth_token_secret@ and add them into the config file @~/.xoauthrc@:
+<pre><code>
+# The last oauth_token output of xoauth.py
+token = 4/8Um6T29C3ehUXnqqQYzqAqzsAKRK
+# The last oauth_token_secret output of xoauth.py
+token_secret = Eq2DySVk63bJegXlgW8ZfrQZ
+</code></pre>
+# Configure mutt to use XOAUTH as the SASL auth mechanism. E.g., in your @~/.muttrc@:
+<pre><code>
+set imap_authenticators="XOAUTH"
+set smtp_authenticators="XOAUTH"
+</code></pre>
