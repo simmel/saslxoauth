@@ -279,7 +279,6 @@ static int xoauth_client_mech_step(void *conn_context,
     unsigned int free_password = 0; /* set if we need to free password */
     int user_result = SASL_OK;
     int auth_result = SASL_OK;
-    int pass_result = SASL_OK;
     int result;
     char *p;
 
