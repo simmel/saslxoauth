@@ -259,8 +259,9 @@ static int xoauth_client_mech_new(void *glob_context __attribute__((unused)),
     memset(text, 0, sizeof(client_context_t));
     
     *conn_context = text;
-    debugfp = fopen("/tmp/sasl_oauth.log","w");
+    debugfp = fopen("/tmp/sasl_oauth.log","a");
     fprintf(debugfp, "in client mech new\n");
+    fclose(debugfp);
     return SASL_OK;
 }
 
@@ -288,6 +289,7 @@ static int xoauth_client_mech_step(void *conn_context,
     *clientout = NULL;
     *clientoutlen = 0;
    
+    debugfp = fopen("/tmp/sasl_oauth.log","a");
     fprintf(debugfp,"in xoath client enter\n");
     /* doesn't really matter how the server responds */
     
@@ -450,7 +452,8 @@ static int xoauth_client_mech_step(void *conn_context,
     /* free sensitive info */
     if (free_password) _plug_free_secret(params->utils, &password);
     
-    fprintf(debugfp, "xoauth client exit, error is %s", sasl_errstring(result, NULL, NULL));
+    fprintf(debugfp, "xoauth client exit, error is %s\n", sasl_errstring(result, NULL, NULL));
+    fclose(debugfp);
     return result;
 }
 
@@ -501,7 +504,7 @@ int xoauth_client_plug_init(sasl_utils_t *utils,
     *pluglist = xoauth_client_plugins;
     *plugcount = 1;
 
-    debugfp = fopen("/tmp/sasl_oauth.log","w");
+    debugfp = fopen("/tmp/sasl_oauth.log","a");
     
     fclose(debugfp);
     return SASL_OK;
