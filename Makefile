@@ -19,4 +19,4 @@ install: all
 	install libxoauth.so.2.0.22 /usr/lib/sasl2/
 	install libxoauth.so /usr/lib/sasl2/
 clean:
-	rm *.lo *.so.2.0.22 *.o
+	rm -f *.lo *.so.2.0.22 *.o
