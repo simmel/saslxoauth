@@ -2,7 +2,7 @@
  * Rob Siemborski
  * $Id: plugin_common.c,v 1.20 2004/06/23 18:43:37 rjs3 Exp $
  */
-/* 
+/*
  * Copyright (c) 1998-2003 Carnegie Mellon University.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -20,7 +20,7 @@
  * 3. The name "Carnegie Mellon University" must not be used to
  *    endorse or promote products derived from this software without
  *    prior written permission. For permission or any other legal
- *    details, please contact  
+ *    details, please contact
  *      Office of Technology Transfer
  *      Carnegie Mellon University
  *      5000 Forbes Avenue
@@ -111,14 +111,14 @@ static void sockaddr_unmapped(
 }
 
 int _plug_ipfromstring(const sasl_utils_t *utils, const char *addr,
-		       struct sockaddr *out, socklen_t outlen) 
+		       struct sockaddr *out, socklen_t outlen)
 {
     int i, j;
     socklen_t len;
     struct sockaddr_storage ss;
     struct addrinfo hints, *ai = NULL;
     char hbuf[NI_MAXHOST];
-    
+
     if(!utils || !addr || !out) {
 	if(utils) PARAMERROR( utils );
 	return SASL_BADPARAM;
@@ -148,7 +148,7 @@ int _plug_ipfromstring(const sasl_utils_t *utils, const char *addr,
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE | AI_NUMERICHOST;
 
-    if (getaddrinfo(hbuf, &addr[i], &hints, &ai) != 0) {	
+    if (getaddrinfo(hbuf, &addr[i], &hints, &ai) != 0) {
 	PARAMERROR( utils );
 	return SASL_BADPARAM;
     }
@@ -168,7 +168,7 @@ int _plug_ipfromstring(const sasl_utils_t *utils, const char *addr,
 }
 
 int _plug_iovec_to_buf(const sasl_utils_t *utils, const struct iovec *vec,
-		       unsigned numiov, buffer_info_t **output) 
+		       unsigned numiov, buffer_info_t **output)
 {
     unsigned i;
     int ret;
@@ -179,7 +179,7 @@ int _plug_iovec_to_buf(const sasl_utils_t *utils, const struct iovec *vec,
 	if(utils) PARAMERROR( utils );
 	return SASL_BADPARAM;
     }
-    
+
     if(!(*output)) {
 	*output = utils->malloc(sizeof(buffer_info_t));
 	if(!*output) {
@@ -190,7 +190,7 @@ int _plug_iovec_to_buf(const sasl_utils_t *utils, const struct iovec *vec,
     }
 
     out = *output;
-    
+
     out->curlen = 0;
     for(i=0; i<numiov; i++)
 	out->curlen += vec[i].iov_len;
@@ -201,10 +201,10 @@ int _plug_iovec_to_buf(const sasl_utils_t *utils, const struct iovec *vec,
 	MEMERROR(utils);
 	return SASL_NOMEM;
     }
-    
+
     memset(out->data, 0, out->reallen);
     pos = out->data;
-    
+
     for(i=0; i<numiov; i++) {
 	memcpy(pos, vec[i].iov_base, vec[i].iov_len);
 	pos += vec[i].iov_len;
@@ -215,7 +215,7 @@ int _plug_iovec_to_buf(const sasl_utils_t *utils, const struct iovec *vec,
 
 /* Basically a conditional call to realloc(), if we need more */
 int _plug_buf_alloc(const sasl_utils_t *utils, char **rwbuf,
-		    unsigned *curlen, unsigned newlen) 
+		    unsigned *curlen, unsigned newlen)
 {
     if(!utils || !rwbuf || !curlen) {
 	PARAMERROR(utils);
@@ -243,7 +243,7 @@ int _plug_buf_alloc(const sasl_utils_t *utils, char **rwbuf,
 	    return SASL_NOMEM;
 	}
 	*curlen = needed;
-    } 
+    }
 
     return SASL_OK;
 }
@@ -287,7 +287,7 @@ void _plug_free_string(const sasl_utils_t *utils, char **str)
   *str=NULL;
 }
 
-void _plug_free_secret(const sasl_utils_t *utils, sasl_secret_t **secret) 
+void _plug_free_secret(const sasl_utils_t *utils, sasl_secret_t **secret)
 {
     if(!utils || !secret || !(*secret)) return;
 
@@ -296,7 +296,7 @@ void _plug_free_secret(const sasl_utils_t *utils, sasl_secret_t **secret)
     *secret = NULL;
 }
 
-/* 
+/*
  * Trys to find the prompt with the lookingfor id in the prompt list
  * Returns it if found. NULL otherwise
  */
@@ -333,7 +333,7 @@ int _plug_get_simple(const sasl_utils_t *utils, unsigned int id, int required,
     prompt = _plug_find_prompt(prompt_need, id);
     if (prompt != NULL) {
 	/* We prompted, and got.*/
-	
+
 	if (required && !prompt->result) {
 	    SETERROR(utils, "Unexpectedly missing a prompt result");
 	    return SASL_BADPARAM;
@@ -342,7 +342,7 @@ int _plug_get_simple(const sasl_utils_t *utils, unsigned int id, int required,
 	*result = prompt->result;
 	return SASL_OK;
     }
-  
+
     /* Try to get the callback... */
     ret = utils->getcallback(utils->conn, id, &simple_cb, &simple_context);
 
@@ -359,7 +359,7 @@ int _plug_get_simple(const sasl_utils_t *utils, unsigned int id, int required,
 	    return SASL_BADPARAM;
 	}
     }
-  
+
     return ret;
 }
 
@@ -381,12 +381,12 @@ int _plug_get_password(const sasl_utils_t *utils, sasl_secret_t **password,
     prompt = _plug_find_prompt(prompt_need, SASL_CB_PASS);
     if (prompt != NULL) {
 	/* We prompted, and got.*/
-	
+
 	if (!prompt->result) {
 	    SETERROR(utils, "Unexpectedly missing a prompt result");
 	    return SASL_BADPARAM;
 	}
-      
+
 	/* copy what we got into a secret_t */
 	*password = (sasl_secret_t *) utils->malloc(sizeof(sasl_secret_t) +
 						    prompt->len + 1);
@@ -394,7 +394,7 @@ int _plug_get_password(const sasl_utils_t *utils, sasl_secret_t **password,
 	    MEMERROR(utils);
 	    return SASL_NOMEM;
 	}
-      
+
 	(*password)->len=prompt->len;
 	memcpy((*password)->data, prompt->result, prompt->len);
 	(*password)->data[(*password)->len]=0;
@@ -440,12 +440,12 @@ int _plug_challenge_prompt(const sasl_utils_t *utils, unsigned int id,
     prompt = _plug_find_prompt(prompt_need, id);
     if (prompt != NULL) {
 	/* We prompted, and got.*/
-	
+
 	if (!prompt->result) {
 	    SETERROR(utils, "Unexpectedly missing a prompt result");
 	    return SASL_BADPARAM;
 	}
-      
+
 	*result = prompt->result;
 	return SASL_OK;
     }
@@ -486,7 +486,7 @@ int _plug_get_realm(const sasl_utils_t *utils, const char **availrealms,
     prompt = _plug_find_prompt(prompt_need, SASL_CB_GETREALM);
     if (prompt != NULL) {
 	/* We prompted, and got.*/
-	
+
 	if (!prompt->result) {
 	    SETERROR(utils, "Unexpectedly missing a prompt result");
 	    return SASL_BADPARAM;
@@ -510,7 +510,7 @@ int _plug_get_realm(const sasl_utils_t *utils, const char **availrealms,
 	    return SASL_BADPARAM;
 	}
     }
-  
+
     return ret;
 }
 
@@ -549,7 +549,7 @@ int _plug_make_prompts(const sasl_utils_t *utils,
 	return SASL_NOMEM;
     }
     memset(prompts, 0, alloc_size);
-  
+
     *prompts_res = prompts;
 
     if (user_prompt) {
@@ -635,7 +635,7 @@ int _plug_decode(decode_context_t *text,
     char *tmp;
     unsigned tmplen;
     int ret;
-    
+
     *outputlen = 0;
 
     while (inputlen) { /* more input */
@@ -645,24 +645,24 @@ int _plug_decode(decode_context_t *text,
 	    tocopy = (inputlen > text->needsize) ? text->needsize : inputlen;
 	    memcpy(text->sizebuf + 4 - text->needsize, input, tocopy);
 	    text->needsize -= tocopy;
-	
+
 	    input += tocopy;
 	    inputlen -= tocopy;
-	
+
 	    if (!text->needsize) { /* we have the entire 4-byte size */
 		memcpy(&(text->size), text->sizebuf, 4);
 		text->size = ntohl(text->size);
-	
+
 		if (!text->size) /* should never happen */
 		    return SASL_FAIL;
-	    
+
 		if (text->size > text->in_maxbuf) {
-		    text->utils->log(NULL, SASL_LOG_ERR, 
+		    text->utils->log(NULL, SASL_LOG_ERR,
 				     "encoded packet size too big (%d > %d)",
 				     text->size, text->in_maxbuf);
 		    return SASL_FAIL;
 		}
-	    
+
 		if (!text->buffer)
 		    text->buffer = text->utils->malloc(text->in_maxbuf);
 		if (text->buffer == NULL) return SASL_NOMEM;
@@ -707,7 +707,7 @@ int _plug_decode(decode_context_t *text,
 	text->needsize = 4;
     }
 
-    return SASL_OK;    
+    return SASL_OK;
 }
 
 void _plug_decode_free(decode_context_t *text)
@@ -717,7 +717,7 @@ void _plug_decode_free(decode_context_t *text)
 
 /* returns the realm we should pretend to be in */
 int _plug_parseuser(const sasl_utils_t *utils,
-		    char **user, char **realm, const char *user_realm, 
+		    char **user, char **realm, const char *user_realm,
 		    const char *serverFQDN, const char *input)
 {
     int ret;
@@ -737,7 +737,7 @@ int _plug_parseuser(const sasl_utils_t *utils,
 	    /* Default to serverFQDN */
 	    ret = _plug_strdup(utils, serverFQDN, realm, NULL);
 	}
-	
+
 	if (ret == SASL_OK) {
 	    ret = _plug_strdup(utils, input, user, NULL);
 	}
@@ -793,16 +793,16 @@ char * _plug_get_error_message (const sasl_utils_t *utils,
 #ifdef WIN32
     LPVOID lpMsgBuf;
 
-    FormatMessage( 
-	FORMAT_MESSAGE_ALLOCATE_BUFFER | 
-	FORMAT_MESSAGE_FROM_SYSTEM | 
+    FormatMessage(
+	FORMAT_MESSAGE_ALLOCATE_BUFFER |
+	FORMAT_MESSAGE_FROM_SYSTEM |
 	FORMAT_MESSAGE_IGNORE_INSERTS,
 	NULL,
 	error,
 	MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), /* Default language */
 	(LPTSTR) &lpMsgBuf,
 	0,
-	NULL 
+	NULL
     );
 
     if (_plug_strdup (utils, lpMsgBuf, &return_value, NULL) != SASL_OK) {
@@ -825,10 +825,10 @@ void _plug_snprintf_os_info (char * osbuf, int osbuf_len)
     char *sysname;
 
 /* :
-  DWORD dwOSVersionInfoSize; 
-  DWORD dwMajorVersion; 
-  DWORD dwMinorVersion; 
-  DWORD dwBuildNumber; 
+  DWORD dwOSVersionInfoSize;
+  DWORD dwMajorVersion;
+  DWORD dwMinorVersion;
+  DWORD dwBuildNumber;
   TCHAR szCSDVersion[ 128 ];
 //Only NT SP 6 and later
   WORD wServicePackMajor;

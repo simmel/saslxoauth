@@ -3,7 +3,7 @@
  * Rob Siemborski
  * $Id: plugin_common.h,v 1.21 2006/01/17 12:18:21 mel Exp $
  */
-/* 
+/*
  * Copyright (c) 1998-2003 Carnegie Mellon University.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -11,7 +11,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -21,7 +21,7 @@
  * 3. The name "Carnegie Mellon University" must not be used to
  *    endorse or promote products derived from this software without
  *    prior written permission. For permission or any other legal
- *    details, please contact  
+ *    details, please contact
  *      Office of Technology Transfer
  *      Carnegie Mellon University
  *      5000 Forbes Avenue
@@ -130,7 +130,7 @@ PLUG_API int sasl_canonuser_init(const sasl_utils_t *utils, \
 #endif
 
 #ifndef SASLINT_H
-typedef struct buffer_info 
+typedef struct buffer_info
 {
     char *data;
     unsigned curlen;   /* Current length of data in buffer */
@@ -204,7 +204,7 @@ int _plug_decode(decode_context_t *text,
 void _plug_decode_free(decode_context_t *text);
 
 int _plug_parseuser(const sasl_utils_t *utils,
-		    char **user, char **realm, const char *user_realm, 
+		    char **user, char **realm, const char *user_realm,
 		    const char *serverFQDN, const char *input);
 
 int _plug_make_fulluser(const sasl_utils_t *utils,

@@ -51,17 +51,17 @@ int main(void) {
   unsigned olen;
   char* mech;
   int rc;
-  
+
   rc = my_sasl_start();
   if (rc != SASL_OK) {
     fprintf(stderr, "SASL: INIT FAIL\n");
     goto end;
   }
-  
+
   printf("here 0\n");
 
-  rc = sasl_client_new("IMAP", 
-		       "imap.gmail.com", 
+  rc = sasl_client_new("IMAP",
+		       "imap.gmail.com",
 		       "1.1.1.1;993",
 		       "2.2.2.2;12345",
 		       NULL,
@@ -71,7 +71,7 @@ int main(void) {
     fprintf(stderr, "SASL: NEW FAIL\n");
     goto end;
   }
-  
+
   printf("here1\n");
   rc = sasl_client_start (saslconn, method, &interaction,
         &pc, &olen, &mech);
