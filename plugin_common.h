@@ -65,6 +65,8 @@
 #include <saslutil.h>
 #include <saslplug.h>
 
+#include <string.h>
+
 #ifdef WIN32
 #define PLUG_API __declspec(dllexport)
 #else
