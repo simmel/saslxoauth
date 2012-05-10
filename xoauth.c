@@ -319,6 +319,7 @@ int generate_xoauth_token (char *token, const char *email, const char *service) 
     return 0;
   }
 
+  /* FIXME Check if t_key_ptr and t_secret_ptr are NULL and return 0. */
   fprintf(debugfp, "token: %s\ntoken_secret: %s\n", t_key_ptr, t_secret_ptr);
   argcc = oauth_split_url_parameters(url, &argvv);
 
