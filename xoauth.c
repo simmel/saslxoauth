@@ -510,7 +510,7 @@ static int xoauth_client_mech_step(void *conn_context,
     /* free sensitive info */
     if (free_password) _plug_free_secret(params->utils, &password);
 
-    fprintf(debugfp, "xoauth client exit, error is %s\n", sasl_errstring(result, NULL, NULL));
+    fprintf(debugfp, "xoauth client exit, error is %s\n\n", sasl_errstring(result, NULL, NULL));
     fclose(debugfp);
     return result;
 }
