@@ -286,17 +286,11 @@ int generate_xoauth_token (char *token, const char *email, const char *service) 
   int argcc;
   char **argvv = NULL;
   char *parameters;
-  int home_len;
 
   t_key_ptr = t_key;
   t_secret_ptr = t_secret;
   config_file = config_file_char;
-  /* FIXME snprintf */
-  home_len = strlen(getenv("HOME"));
-  strncpy(config_file, getenv("HOME"), home_len);
-  config_file[home_len] = '\0';
-  strncat(config_file, "/.xoauthrc", sizeof("/.xoauthrc"));
-
+  snprintf(config_file, sizeof(config_file_char), "%s/%s", getenv("HOME"), ".xoauthrc");
   fprintf(debugfp, "config_file: %s\n", config_file);
 
   snprintf(url, sizeof(url_str), "https://mail.google.com/mail/b/%s/%s/", email, service);
