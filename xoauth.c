@@ -319,6 +319,11 @@ int generate_xoauth_token (char *token, const char *email, const char *service) 
     return 0;
   }
 
+  if (strlen(t_key) == 0 || strlen(t_secret) == 0) {
+    fprintf(debugfp, "ERROR: token(%i) or token_secret(%i) is 0 and not parsed from config, aborting.",
+        strlen(t_key), strlen(t_secret));
+    return 0;
+  }
   fprintf(debugfp, "token: %s\ntoken_secret: %s\n", t_key, t_secret);
   argcc = oauth_split_url_parameters(url, &argvv);
 
