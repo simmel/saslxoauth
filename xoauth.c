@@ -279,8 +279,7 @@ int generate_xoauth_token (char *token, const char *email, const char *service) 
 
   FILE *config;
   char buf[1024];
-  char t_key[80], t_secret[80];
-  char *t_key_ptr, *t_secret_ptr;
+  char t_key[80] = "", t_secret[80] = "";
   char config_file_char[1024], *config_file;
   char sscanf_format[12];
   int i;
@@ -289,8 +288,6 @@ int generate_xoauth_token (char *token, const char *email, const char *service) 
   char **argvv = NULL;
   char *parameters;
 
-  t_key_ptr = t_key;
-  t_secret_ptr = t_secret;
   config_file = config_file_char;
   snprintf(config_file, sizeof(config_file_char), "%s/%s", getenv("HOME"), ".xoauthrc");
   fprintf(debugfp, "config_file: %s\n", config_file);
@@ -310,10 +307,10 @@ int generate_xoauth_token (char *token, const char *email, const char *service) 
     while (fgets(buf, sizeof(buf), config) != NULL) {
       sscanf(buf, sscanf_format, key, value);
       if (strncmp(key, "token", sizeof(key)) == 0) {
-        snprintf(t_key_ptr, sizeof(t_key), "%s", value);
+        snprintf(t_key, sizeof(t_key), "%s", value);
       }
       else if (strncmp(key, "token_secret", sizeof(key)) == 0) {
-        snprintf(t_secret_ptr, sizeof(t_secret), "%s", value);
+        snprintf(t_secret, sizeof(t_secret), "%s", value);
       }
     }
   }
@@ -322,8 +319,7 @@ int generate_xoauth_token (char *token, const char *email, const char *service) 
     return 0;
   }
 
-  /* FIXME Check if t_key_ptr and t_secret_ptr are NULL and return 0. */
-  fprintf(debugfp, "token: %s\ntoken_secret: %s\n", t_key_ptr, t_secret_ptr);
+  fprintf(debugfp, "token: %s\ntoken_secret: %s\n", t_key, t_secret);
   argcc = oauth_split_url_parameters(url, &argvv);
 
   oauth_sign_array2_process(&argcc, &argvv, NULL, OA_HMAC, NULL, c_key, c_secret, t_key, t_secret);
