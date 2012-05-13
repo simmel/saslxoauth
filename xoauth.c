@@ -282,6 +282,8 @@ int generate_xoauth_token (char *token, const char *email, const char *service) 
   char t_key[80], t_secret[80];
   char *t_key_ptr, *t_secret_ptr;
   char config_file_char[1024], *config_file;
+  char sscanf_format[12];
+  int i;
 
   int argcc;
   char **argvv = NULL;
@@ -293,13 +295,20 @@ int generate_xoauth_token (char *token, const char *email, const char *service) 
   snprintf(config_file, sizeof(config_file_char), "%s/%s", getenv("HOME"), ".xoauthrc");
   fprintf(debugfp, "config_file: %s\n", config_file);
 
+  /* Create the format for sscanf dynamically */
+  i = snprintf(sscanf_format, sizeof(sscanf_format), "%%%ds = %%%ds", sizeof(key)-1, sizeof(value)-1);
+  if (i >= (int)sizeof(sscanf_format)) {
+    fprintf(debugfp, "ERROR: sscanf_format is too small (%i), aborting.\n", sizeof(sscanf_format));
+    return 1;
+  }
+
   snprintf(url, sizeof(url_str), "https://mail.google.com/mail/b/%s/%s/", email, service);
   fprintf(debugfp,"url: %s\n", url);
 
   config = fopen(config_file, "r");
   if (config != NULL) {
     while (fgets(buf, sizeof(buf), config) != NULL) {
-      sscanf(buf, "%s = %s", key, value);
+      sscanf(buf, sscanf_format, key, value);
       if (strncmp(key, "token", sizeof(key)) == 0) {
         strncpy(t_key_ptr, value, sizeof(t_key));
       }
