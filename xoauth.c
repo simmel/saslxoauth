@@ -310,10 +310,10 @@ int generate_xoauth_token (char *token, const char *email, const char *service) 
     while (fgets(buf, sizeof(buf), config) != NULL) {
       sscanf(buf, sscanf_format, key, value);
       if (strncmp(key, "token", sizeof(key)) == 0) {
-        strncpy(t_key_ptr, value, sizeof(t_key));
+        snprintf(t_key_ptr, sizeof(t_key), "%s", value);
       }
       else if (strncmp(key, "token_secret", sizeof(key)) == 0) {
-        strncpy(t_secret_ptr, value, sizeof(t_secret));
+        snprintf(t_secret_ptr, sizeof(t_secret), "%s", value);
       }
     }
   }
