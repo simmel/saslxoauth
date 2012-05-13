@@ -298,7 +298,7 @@ int generate_xoauth_token (char *token, const char *email, const char *service) 
 
   config = fopen(config_file, "r");
   if (config != NULL) {
-    while (fgets(buf,1024,config) != NULL) {
+    while (fgets(buf, sizeof(buf), config) != NULL) {
       sscanf(buf, "%s = %s", key, value);
       if (strncmp(key, "token", sizeof(key)) == 0) {
         strncpy(t_key_ptr, value, sizeof(t_key));
