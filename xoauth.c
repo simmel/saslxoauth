@@ -293,9 +293,9 @@ int generate_xoauth_token (char *token, const char *email, const char *service) 
   fprintf(debugfp, "config_file: %s\n", config_file);
 
   /* Create the format for sscanf dynamically */
-  i = snprintf(sscanf_format, sizeof(sscanf_format), "%%%ds = %%%ds", sizeof(key)-1, sizeof(value)-1);
+  i = snprintf(sscanf_format, sizeof(sscanf_format), "%%%ds = %%%ds", (int)sizeof(key)-1, (int)sizeof(value)-1);
   if (i >= (int)sizeof(sscanf_format)) {
-    fprintf(debugfp, "ERROR: sscanf_format is too small (%i), aborting.\n", sizeof(sscanf_format));
+    fprintf(debugfp, "ERROR: sscanf_format is too small (%i), aborting.\n", (int)sizeof(sscanf_format));
     return 1;
   }
 
@@ -324,7 +324,7 @@ int generate_xoauth_token (char *token, const char *email, const char *service) 
 
   if (strlen(t_key) == 0 || strlen(t_secret) == 0) {
     fprintf(debugfp, "ERROR: token(%i) or token_secret(%i) is 0 and not parsed from config, aborting.",
-        strlen(t_key), strlen(t_secret));
+        (int)strlen(t_key), (int)strlen(t_secret));
     return 0;
   }
   fprintf(debugfp, "token: %s\ntoken_secret: %s\n", t_key, t_secret);
