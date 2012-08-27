@@ -313,6 +313,9 @@ int generate_xoauth_token (char *token, const char *email, const char *service) 
         snprintf(t_secret, sizeof(t_secret), "%s", value);
       }
     }
+    if (fclose(config) != 0) {
+     fprintf(debugfp, "ERROR: Couldn't close file '%s', leaving FD '%i' dangling.\n", config_file, fileno(config));
+    }
   }
   else {
     fprintf(debugfp,"Can't read config file\n");
