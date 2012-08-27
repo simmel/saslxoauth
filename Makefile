@@ -1,4 +1,4 @@
-CFLAGS=-Wall -Wextra -pedantic -I/usr/include/sasl -g
+CFLAGS=-Wall -Wextra -pedantic -I/usr/include/sasl -g -D_FORTIFY_SOURCE=2 -fno-strict-overflow -fstack-protector-all -fPIE --param ssp-buffer-size=1
 LDFLAGS=-lsasl2
 
 all: libxoauth.so.2.0.22
