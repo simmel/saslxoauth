@@ -73,6 +73,7 @@
 
 #include "plugin_common.h"
 
+#pragma GCC diagnostic ignored "-Wconversion"
 /* translate IPv4 mapped IPv6 address to IPv4 address */
 static void sockaddr_unmapped(
 #ifdef IN6_IS_ADDR_V4MAPPED
