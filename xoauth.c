@@ -332,7 +332,7 @@ int generate_xoauth_token (char *token, const char *email, const char *service) 
 
   oauth_sign_array2_process(&argcc, &argvv, NULL, OA_HMAC, NULL, c_key, c_secret, t_key, t_secret);
 
-  parameters = oauth_serialize_url_sep(*&argcc, 1, *&argvv, ",", 4);
+  parameters = oauth_serialize_url_sep(*&argcc, 1, *&argvv, (char *)(uintptr_t)(const char *)",", 4);
 
   oauth_free_array(&argcc, &argvv);
 
