@@ -271,8 +271,8 @@ static int xoauth_client_mech_new(void *glob_context __attribute__((unused)),
 int generate_xoauth_token (char *token, const char *email, const char *service) {
   char url_str[1024];
   char *url = url_str;
-  char *c_key = "anonymous";    /* consumer key */
-  char *c_secret = "anonymous"; /* consumer secret */
+  char const *c_key = "anonymous";    /* consumer key */
+  char const *c_secret = "anonymous"; /* consumer secret */
   extern int errno;
   char key[80];
   char value[80];
