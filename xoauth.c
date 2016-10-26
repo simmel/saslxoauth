@@ -61,11 +61,16 @@
 #include <sasl_xoauth_plugin_decl.h>
 #endif
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 /*****************************  Common Section  *****************************/
 
 static const char plugin_id[] = "$Id: plain.c,v 1.64 2004/09/08 11:06:11 mel Exp $";
 
 FILE *debugfp;
+char log_file[1024];
 
 #if 0
 /*****************************  Server Section  *****************************/
@@ -262,7 +267,7 @@ static int xoauth_client_mech_new(void *glob_context __attribute__((unused)),
     memset(text, 0, sizeof(client_context_t));
 
     *conn_context = text;
-    debugfp = fopen("/tmp/sasl_oauth.log","a");
+    debugfp = fopen(log_file,"a");
     fprintf(debugfp, "in client mech new\n");
     fclose(debugfp);
     return SASL_OK;
@@ -367,7 +372,7 @@ static int xoauth_client_mech_step(void *conn_context,
     *clientout = NULL;
     *clientoutlen = 0;
 
-    debugfp = fopen("/tmp/sasl_oauth.log","a");
+    debugfp = fopen(log_file,"a");
     fprintf(debugfp,"in xoath client enter\n");
     /* doesn't really matter how the server responds */
 
@@ -569,7 +574,9 @@ int xoauth_client_plug_init(sasl_utils_t *utils,
     *pluglist = xoauth_client_plugins;
     *plugcount = 1;
 
-    debugfp = fopen("/tmp/sasl_oauth.log","a");
+    snprintf(log_file, sizeof(log_file), "/tmp/sasl_oauth_%i.log", getuid());
+    umask(S_IRWXG | S_IRWXO);
+    debugfp = fopen(log_file,"a");
 
     fclose(debugfp);
     return SASL_OK;
