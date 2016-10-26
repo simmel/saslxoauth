@@ -250,7 +250,7 @@ int _plug_buf_alloc(const sasl_utils_t *utils, char **rwbuf,
 
 /* copy a string */
 int _plug_strdup(const sasl_utils_t * utils, const char *in,
-		 char **out, int *outlen)
+		 char **out, size_t *outlen)
 {
   size_t len = strlen(in);
 

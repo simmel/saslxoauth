@@ -149,7 +149,7 @@ int _plug_iovec_to_buf(const sasl_utils_t *utils, const struct iovec *vec,
 int _plug_buf_alloc(const sasl_utils_t *utils, char **rwbuf,
 		    unsigned *curlen, unsigned newlen);
 int _plug_strdup(const sasl_utils_t * utils, const char *in,
-	         char **out, int *outlen);
+	         char **out, size_t *outlen);
 void _plug_free_string(const sasl_utils_t *utils, char **str);
 void _plug_free_secret(const sasl_utils_t *utils, sasl_secret_t **secret);
 
